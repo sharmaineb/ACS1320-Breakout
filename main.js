@@ -10,15 +10,6 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
-
-const bricks = [];
-for (let c = 0; c < brickColumnCount; c++) {
-  bricks[c] = [];
-  for (let r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
-  }
-}
-
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
@@ -28,6 +19,53 @@ let y = canvas.height - 30;
 
 let dx = 2;
 let dy = -2;
+let score = 0;
+
+const bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
+  }
+}
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+      rightPressed = true;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+      leftPressed = true;
+    }
+}
+  
+function keyUpHandler(e) {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+      rightPressed = false;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+      leftPressed = false;
+    }
+}
+
+function collisionDetection() {
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        const b = bricks[c][r];
+        if (b.status === 1) {
+          if (
+            x > b.x &&
+            x < b.x + brickWidth &&
+            y > b.y &&
+            y < b.y + brickHeight
+          ) {
+            dy = -dy;
+            b.status = 0;
+          }
+        }
+      }
+    }
+}
 
 // function that will loop through all the bricks and compare every single brick's position with
 // the ball's coordinates as each frame is drawn
@@ -35,8 +73,22 @@ function collisionDetection() {
     for (let c = 0; c < brickColumnCount; c++) {
       for (let r = 0; r < brickRowCount; r++) {
         const b = bricks[c][r];
-        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-          dy = -dy;
+        if (b.status === 1) {
+          if (
+            x > b.x &&
+            x < b.x + brickWidth &&
+            y > b.y &&
+            y < b.y + brickHeight
+          ) {
+            dy = -dy;
+            b.status = 0;
+            score++;
+            if (score === brickRowCount * brickColumnCount) {
+              alert("YOU WIN, CONGRATULATIONS!");
+              document.location.reload();
+              clearInterval(interval); // Needed for Chrome to end game
+            }
+          }
         }
       }
     }
@@ -76,12 +128,20 @@ function drawBricks() {
       }
     }
 }
+
+// create & update the score display
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText(`Score: ${score}`, 8, 20);
+}
   
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
     drawBall();
     drawPaddle();
+    drawScore();
     collisionDetection();
     x += dx;
     y += dy;
@@ -106,44 +166,6 @@ function draw() {
         paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
     } else if (leftPressed) {
         paddleX = Math.max(paddleX - 7, 0);
-    }
-}
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler(e) {
-    if (e.key === "Right" || e.key === "ArrowRight") {
-      rightPressed = true;
-    } else if (e.key === "Left" || e.key === "ArrowLeft") {
-      leftPressed = true;
-    }
-}
-  
-function keyUpHandler(e) {
-    if (e.key === "Right" || e.key === "ArrowRight") {
-      rightPressed = false;
-    } else if (e.key === "Left" || e.key === "ArrowLeft") {
-      leftPressed = false;
-    }
-}
-
-function collisionDetection() {
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        const b = bricks[c][r];
-        if (b.status === 1) {
-          if (
-            x > b.x &&
-            x < b.x + brickWidth &&
-            y > b.y &&
-            y < b.y + brickHeight
-          ) {
-            dy = -dy;
-            b.status = 0;
-          }
-        }
-      }
     }
 }
 
