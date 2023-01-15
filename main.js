@@ -1,6 +1,9 @@
-const canvas = document.getElementById("myCanvas"); // storing a reference to the <canvas> element to the canvas variable
-const ctx = canvas.getContext("2d"); // ctx variable to store the 2D rendering context
-const ballRadius = 10; // hold the radius of the drawn circle
+// stores a reference to the <canvas> element to the canvas variable
+const canvas = document.getElementById("myCanvas"); 
+// ctx variable to store the 2D rendering context
+const ctx = canvas.getContext("2d"); 
+// hold the radius of the drawn circle
+const ballRadius = 10; 
 const paddleHeight = 10;
 const paddleWidth = 75;
 const brickRowCount = 3;
@@ -104,6 +107,19 @@ function collisionDetection() {
     }
 }
 
+// custom background
+function drawBackground() {
+  // create a linear gradient
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+  // add color stops
+  gradient.addColorStop(0, "#D16BA5");
+  gradient.addColorStop(0.5, "#86A8E7");
+  gradient.addColorStop(1, "#5FFBF1")
+  // set the fill style & draw and fill the background
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -142,18 +158,20 @@ function drawBricks() {
 // create & update the score display
 function drawScore() {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#000000";
     ctx.fillText(`Score: ${score}`, 8, 20);
 }
 
 function drawLives() {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#000000";
     ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
+
   
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
     drawBricks();
     drawBall();
     drawPaddle();
