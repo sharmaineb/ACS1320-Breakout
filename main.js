@@ -1,9 +1,11 @@
 /* eslint-disable no-alert */
 // stores a reference to the <canvas> element to the canvas variable
-const canvas = document.getElementById('myCanvas');
 // ctx variable to store the 2D rendering context
+// DOM references
+const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
-// hold the radius of the drawn circle
+
+// Constants
 const ballRadius = 10;
 const paddleHeight = 10;
 const paddleWidth = 75;
@@ -14,26 +16,42 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
-let paddleX = (canvas.width - paddleWidth) / 2;
-let rightPressed = false;
-let leftPressed = false;
+const paddleXStart = (canvas.width - paddleWidth) / 2;
+const PI2 = Math.PI * 2;
 
-let x = canvas.width / 2;
-let y = canvas.height - 30;
+const ball = {
+  x: 0,
+  y: 0,
+  dx: 0,
+  dy: 0,
+};
 
-let dx = 2;
-let dy = -2;
+// Variables
+let paddleX;
+
+// eslint-disable-next-line no-use-before-define
+resetBallAndPaddle();
+
 let score = 0;
 let lives = 3;
 
+let rightPressed = false;
+let leftPressed = false;
+
+// Setup Bricks Array
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r += 1) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
+    bricks[c][r] = {
+      x: 0,
+      y: 0,
+      status: 1,
+    };
   }
 }
 
+// Functions
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
@@ -73,7 +91,7 @@ function drawBackground() {
 
 function drawBall() {
   ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.arc(ball.x, ball.y, ballRadius, 0, PI2);
   ctx.fillStyle = '#ff6f69';
   ctx.fill();
   ctx.closePath();
@@ -124,16 +142,16 @@ function drawLives() {
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
-      const b = bricks[c][r];
-      if (b.status === 1) {
+      const brick = bricks[c][r];
+      if (brick.status === 1) {
         if (
-          x > b.x
-          && x < b.x + brickWidth
-          && y > b.y
-          && y < b.y + brickHeight
+          ball.x > brick.x
+          && ball.x < brick.x + brickWidth
+          && ball.y > brick.y
+          && ball.y < brick.y + brickHeight
         ) {
-          dy = -dy;
-          b.status = 0;
+          ball.dy = -ball.dy;
+          brick.status = 0;
           score += 1;
           if (score === brickRowCount * brickColumnCount) {
             alert('YOU WIN, CONGRATULATIONS!');
@@ -145,8 +163,59 @@ function collisionDetection() {
   }
 }
 
+function resetBallAndPaddle() {
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height - 30;
+  ball.dx = 3;
+  ball.dy = -3;
+  paddleX = paddleXStart;
+}
+
+function moveBall() {
+  ball.x += ball.dx;
+  ball.y += ball.dy;
+}
+
+function movePaddle() {
+  // Check for arrow keys
+  if (rightPressed) {
+    paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+  } else if (leftPressed) {
+    paddleX = Math.max(paddleX - 7, 0);
+  }
+}
+
+function collisionsWithCanvasAndPaddle() {
+  // Bounce the ball off the left and right of the canvas
+  if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
+    ball.dx = -ball.dx;
+  }
+  // Bounce the ball of the top, paddle, or hit the bottom of the canvas
+  if (ball.y + ball.dy < ballRadius) {
+    // hit the top
+    ball.dy = -ball.dy;
+  } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+    // hit the bottom
+    if (ball.x > paddleX && ball.x < paddleX + paddleWidth) {
+      // hit the paddle
+      ball.dy = -ball.dy;
+    } else {
+      // lose a life
+      lives -= 1;
+      if (!lives) {
+        alert('GAME OVER');
+        document.location.reload();
+      } else {
+        resetBallAndPaddle();
+      }
+    }
+  }
+}
+
+// Game Loop
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Call helper functions
   drawBackground();
   drawBricks();
   drawBall();
@@ -154,43 +223,18 @@ function draw() {
   drawScore();
   drawLives();
   collisionDetection();
-  x += dx;
-  y += dy;
+  moveBall();
+  movePaddle();
+  collisionsWithCanvasAndPaddle();
 
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx;
-  }
-
-  if (y + dy < ballRadius) {
-    dy = -dy;
-  } else if (y + dy > canvas.height - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
-    } else {
-      lives -= 1;
-      if (!lives) {
-        alert('GAME OVER');
-        document.location.reload();
-      } else {
-        x = canvas.width / 2;
-        y = canvas.height - 30;
-        dx = 3;
-        dy = -3;
-        paddleX = (canvas.width - paddleWidth) / 2;
-      }
-    }
-  }
-
-  if (rightPressed) {
-    paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
-  } else if (leftPressed) {
-    paddleX = Math.max(paddleX - 7, 0);
-  }
+  // Draw the screen again
   requestAnimationFrame(draw);
 }
 
+// Register Event Listeners
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
 
+// Starts program at entry point
 draw();
