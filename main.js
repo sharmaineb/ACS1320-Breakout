@@ -18,13 +18,18 @@ const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 const paddleXStart = (canvas.width - paddleWidth) / 2;
 const PI2 = Math.PI * 2;
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class Ball {
+  constructor(x, y, dx, dy, radius) {
+    this.x = 0;
+    this.y = 0;
+    this.dx = 2;
+    this.dy = -2;
+    this.radius = 10;
+  }
+}
 
-const ball = {
-  x: 0,
-  y: 0,
-  dx: 0,
-  dy: 0,
-};
+const ball = new Ball(1, 2, 3, 4, 10);
 
 // Variables
 let paddleX;
@@ -91,7 +96,7 @@ function drawBackground() {
 
 function drawBall() {
   ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ballRadius, 0, PI2);
+  ctx.arc(ball.x, ball.y, ball.radius, 0, PI2);
   ctx.fillStyle = '#ff6f69';
   ctx.fill();
   ctx.closePath();
