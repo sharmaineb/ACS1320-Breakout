@@ -1,7 +1,3 @@
-// ----------------------------------------------------------
-// Game
-// ----------------------------------------------------------
-
 class Game {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
@@ -126,6 +122,7 @@ class Game {
         this.livesLabel.value -= 1;
 
         if (this.livesLabel.value < 1) {
+          // eslint-disable-next-line no-alert
           alert('GAME OVER');
           this.ball.x = 200;
           this.ball.y = 200;
