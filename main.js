@@ -134,42 +134,34 @@ class Paddle {
 const paddle = new Paddle(paddleXStart, paddleYStart, paddleWidth, paddleHeight, objectColor);
 
 // Score
-class Score {
-  constructor(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.value = 0;
-  }
-
-  render(ctx) {
-
-  }
-}
-
 // Lives
-class Lives {
-  constructor(x, y, color) {
+
+class GameLabel {
+  constructor(text, x, y, color, font = '16px Arial') {
+    this.text = text;
     this.x = x;
     this.y = y;
     this.color = color;
     this.value = 0;
+    this.font = font;
   }
 
   render(ctx) {
-
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText(`${this.text} ${this.value}`, this.x, this.y);
   }
 }
 
+const scoreLabel = new GameLabel('Score: ', 8, 20);
+const livesLabel = new GameLabel('Lives: ', canvas.width - 65, 20);
+livesLabel.value = 3;
 // Game
 
 const ball = new Ball(0, 0, 2, -2, ballRadius, objectColor);
 
 // eslint-disable-next-line no-use-before-define
 resetBallAndPaddle();
-
-let score = 0;
-let lives = 3;
 
 let rightPressed = false;
 let leftPressed = false;
@@ -212,19 +204,6 @@ function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// create & update the score display
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#000000';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#000000';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-}
-
 // function that will loop through all the bricks and compare every single brick's position with
 // the ball's coordinates as each frame is drawn
 function collisionDetection() {
@@ -240,8 +219,9 @@ function collisionDetection() {
         ) {
           ball.dy = -ball.dy;
           brick.status = 0;
-          score += 1;
-          if (score === brickRowCount * brickColumnCount) {
+
+          scoreLabel.value += 1;
+          if (scoreLabel.value === bricks.cols * bricks.rows) {
             alert('YOU WIN, CONGRATULATIONS!');
             document.location.reload();
           }
@@ -284,8 +264,9 @@ function collisionsWithCanvasAndPaddle() {
       ball.dy = -ball.dy;
     } else {
       // lose a life
-      lives -= 1;
-      if (!lives) {
+      livesLabel.value -= 1;
+
+      if (livesLabel.value < 1) {
         alert('GAME OVER');
         document.location.reload();
       } else {
@@ -303,8 +284,8 @@ function draw() {
   bricks.render(ctx);
   ball.render(ctx);
   paddle.render(ctx);
-  drawScore();
-  drawLives();
+  scoreLabel.render(ctx);
+  livesLabel.render(ctx);
   collisionDetection();
   ball.move();
   movePaddle();
