@@ -19,7 +19,6 @@ class Game {
     this.brickOffsetLeft = 30;
     this.paddleXStart = (this.canvas.width - this.paddleWidth) / 2;
     this.paddleYStart = this.canvas.height - this.paddleHeight;
-    this.PI2 = Math.PI * 2;
     this.objectColor = '#0095DD';
     this.gameOverMessage = 'Game Over';
 
@@ -31,7 +30,17 @@ class Game {
       this.paddleHeight,
       this.objectColor,
     );
-    this.bricks = new Bricks(this.brickColumnCount, this.brickRowCount);
+    this.bricks = new Bricks({
+      cols: this.brickColumnCount,
+      rows: this.brickRowCount,
+      width: this.brickWidth,
+      height: this.brickHeight,
+      padding: this.brickPadding,
+      offsetLeft: this.offsetLeft,
+      offsetTop: this.offsetTop,
+      color: this.objectColor,
+    });
+    // cols, rows, width, height, padding, offsetLeft, offsetTop, color
     this.scoreLabel = new GameLabel('Score: ', 8, 20);
     this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20);
 
@@ -153,7 +162,7 @@ class Game {
 
   draw() {
     // console.log('game.draw()');
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.bricks.render(this.ctx);
     this.ball.render(this.ctx);
     this.paddle.render(this.ctx);
