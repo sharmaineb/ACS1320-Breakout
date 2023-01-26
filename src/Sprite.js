@@ -1,11 +1,20 @@
-class Brick {
-  constructor(x, y, width, height, color) {
+class Sprite {
+  constructor(x = 0, y = 0, width = 10, height = 10, color = 'green') {
     this.x = x;
     this.y = y;
-    this.status = 1;
     this.width = width;
     this.height = height;
     this.color = color;
+  }
+
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+
+  moveTo(x, y) {
+    this.x = x;
+    this.y = y;
   }
 
   render(ctx) {
@@ -16,3 +25,5 @@ class Brick {
     ctx.closePath();
   }
 }
+
+export default Sprite;

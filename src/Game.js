@@ -1,3 +1,8 @@
+import Ball from './Ball';
+import Bricks from './Bricks';
+import GameLabel from './GameLabel';
+import Sprite from './Sprite';
+
 class Game {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
@@ -19,7 +24,8 @@ class Game {
     this.gameOverMessage = 'Game Over';
 
     this.ball = new Ball(0, 0, 2, -2, this.ballRadius, this.objectColor);
-    this.paddle = new Paddle(
+    // eslint-disable-next-line no-undef
+    this.paddle = new Sprite(
       this.paddleXStart,
       this.paddleYStart,
       this.paddleWidth,
@@ -36,8 +42,8 @@ class Game {
       offsetTop: this.offsetTop,
       color: this.objectColor,
     });
-    // cols, rows, width, height, padding, offsetLeft, offsetTop, color
-    this.scoreLabel = new GameLabel('Score: ', 8, 20);
+
+    this.scoreLabel = new GameLabel('Score: ', 8, 20, this.objectColor);
     this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20);
 
     this.rightPressed = false;
@@ -52,7 +58,6 @@ class Game {
     // eslint-disable-next-line no-use-before-define
     this.resetBallAndPaddle();
 
-    // ** Fix Me **
     document.addEventListener('keydown', (e) => {
       this.keyDownHandler(e);
     }, false);
@@ -175,4 +180,6 @@ class Game {
       this.draw();
     });
   }
-} // End Class -------
+}
+
+export default Game;
