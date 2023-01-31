@@ -3,9 +3,11 @@ import Sprite from './Sprite';
 class Ball extends Sprite {
   constructor(x = 0, y = 0, dx = 2, dy = -1, radius = 10, color = '#ff6f69') {
     super(x, y, radius * 2, radius * 2, color);
+
     this.dx = dx;
     this.dy = dy;
     this.radius = radius;
+
     this.PI2 = Math.PI * 2;
   }
 
