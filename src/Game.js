@@ -20,7 +20,7 @@ class Game {
     this.brickOffsetLeft = 30;
     this.paddleXStart = (this.canvas.width - this.paddleWidth) / 2;
     this.paddleYStart = (this.canvas.height - this.paddleHeight);
-    this.objectColor = '#0095DD';
+    this.objectColor = '#efffba';
 
     this.gameOverMessage = 'Game Over';
 
@@ -94,10 +94,9 @@ class Game {
         }
       }
     }
-  } // end collision detection
+  }
 
   movePaddle() {
-    /* User paddle controls */
     if (this.rightPressed && this.paddle.x < this.canvas.width - this.paddle.width) {
       this.paddle.moveBy(7, 0);
     } else if (this.leftPressed && this.paddle.x > 0) {
@@ -155,7 +154,7 @@ class Game {
   }
 
   draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); /* removes trail from canvas */
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.bricks.render(this.ctx);
     this.ball.render(this.ctx);
     this.paddle.render(this.ctx);
