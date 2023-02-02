@@ -4,7 +4,32 @@ import GameLabel from './GameLabel';
 import Sprite from './Sprite';
 
 class Game {
-  constructor(canvasId) {
+  canvas: any
+  ctx: any
+  ballRadius: number
+  paddleHeight: number
+  paddleWidth: number
+  brickRowCount: number
+  brickColumnCount: number
+  brickWidth: number
+  brickHeight: number
+  brickPadding: number
+  brickOffsetTop: number
+  brickOffsetLeft: number
+  paddleXStart: number
+  paddleYStart: number
+  objectColor: string
+  gameOverMessage: string
+  ball: Ball
+  paddle: Sprite
+  rightPressed: boolean
+  leftPressed: boolean
+  scoreLabe: GameLabel
+  livesLabel: GameLabel
+  bricks: Bricks
+  scoreLabel: GameLabel
+
+  constructor(canvasId: any) {
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext('2d');
 
@@ -45,7 +70,7 @@ class Game {
     });
 
     this.scoreLabel = new GameLabel('Score: ', 8, 20, this.objectColor);
-    this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20);
+    this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20, this.objectColor);
 
     this.rightPressed = false;
     this.leftPressed = false;
@@ -130,7 +155,7 @@ class Game {
     }
   }
 
-  keyDownHandler(e) {
+  keyDownHandler(e: any) {
     if (e.key === 39) {
       this.rightPressed = true;
     } else if (e.keyCode === 37) {
@@ -138,7 +163,7 @@ class Game {
     }
   }
 
-  keyUpHandler(e) {
+  keyUpHandler(e: any) {
     if (e.key === 39) {
       this.rightPressed = false;
     } else if (e.keyCode === 37) {
@@ -146,7 +171,7 @@ class Game {
     }
   }
 
-  mouseMoveHandler(e) {
+  mouseMoveHandler(e: any) {
     const relativeX = e.clientX - this.canvas.offsetLeft;
     if (relativeX > 0 && relativeX < this.canvas.width) {
       this.paddle.moveTo(relativeX - this.paddle.width / 2, this.paddleYStart);

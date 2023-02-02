@@ -1,16 +1,18 @@
 import Brick from './Brick';
 
 class Bricks {
-  constructor({
-    cols,
-    rows,
-    width,
-    height,
-    padding,
-    offsetLeft,
-    offsetTop,
-    color,
-  }) {
+  cols: number
+  rows: number
+  width: number
+  height: number
+  padding: number
+  offsetLeft: number
+  offsetTop: number
+  color: string
+  bricks: any
+
+  constructor(cols: number, rows: number, width: number, height: number, padding: number, offsetLeft: number, offsetTop: number, color: string,) {
+  
     this.cols = cols;
     this.rows = rows;
     this.bricks = [];
@@ -35,7 +37,7 @@ class Bricks {
     }
   }
 
-  render(ctx) {
+  render(ctx:any) {
     for (let c = 0; c < this.cols; c += 1) {
       for (let r = 0; r < this.rows; r += 1) {
         const brick = this.bricks[c][r];
