@@ -12,7 +12,6 @@ class Ball extends Sprite {
     this.radius = radius
     this.dx = 2
     this.dy = -2
-
   }
 
   move() {
@@ -20,7 +19,7 @@ class Ball extends Sprite {
     this.y += this.dy
   }
 
-  render(ctx: any) { // Override
+  render(ctx: any): void { // Override
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
