@@ -49,7 +49,7 @@ class Game {
 
     this.gameOverMessage = 'Game Over';
 
-    this.ball = new Ball(0, 0, 2, -2, this.ballRadius, this.objectColor);
+    this.ball = new Ball(0, 0, this.ballRadius, this.objectColor);
     this.paddle = new Sprite(
       this.paddleXStart,
       this.paddleYStart,
@@ -58,16 +58,16 @@ class Game {
       this.objectColor,
     );
 
-    this.bricks = new Bricks({
-      cols: this.brickColumnCount,
-      rows: this.brickRowCount,
-      width: this.brickWidth,
-      height: this.brickHeight,
-      padding: this.brickPadding,
-      offsetLeft: this.brickOffsetLeft,
-      offsetTop: this.brickOffsetTop,
-      color: this.objectColor,
-    });
+    this.bricks = new Bricks(
+      this.brickColumnCount,
+      this.brickRowCount,
+      this.brickWidth,
+      this.brickHeight,
+      this.brickPadding,
+      this.brickOffsetLeft,
+      this.brickOffsetTop,
+      this.objectColor,
+    );
 
     this.scoreLabel = new GameLabel('Score: ', 8, 20, this.objectColor);
     this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20, this.objectColor);
@@ -154,9 +154,9 @@ class Game {
       }
     }
   }
-
+  
   keyDownHandler(e: any) {
-    if (e.key === 39) {
+    if (e.keyCode === 39) {
       this.rightPressed = true;
     } else if (e.keyCode === 37) {
       this.leftPressed = true;
@@ -164,7 +164,7 @@ class Game {
   }
 
   keyUpHandler(e: any) {
-    if (e.key === 39) {
+    if (e.keyCode === 39) {
       this.rightPressed = false;
     } else if (e.keyCode === 37) {
       this.leftPressed = false;
